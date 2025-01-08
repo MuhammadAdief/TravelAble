@@ -10,6 +10,8 @@ import Footer from './layout/footer.jsx';
 import LandingPage from "./components/LandingPage.jsx";
 import DashboardPemandu from "./page/pemandu/DashboardPemandu.jsx";
 import Destinasi from "./page/user/destinasi.jsx";
+import DashboardUser from "./page/user/DashboardUser.jsx";
+import chatU from "./page/user/chatU.jsx";
 
 function App() {
   return (
@@ -18,8 +20,18 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route
+            path="/DashboardUser"
+            element={
+            <div>
+                <HeaderUser />
+                <DashboardUser />
+                <Footer />
+              </div>
+            }
+          />
           <Route 
-            path="/tentangkami" 
+            path="/tentang kami" 
             element={
               <div>
                 <HeaderUser />
@@ -77,6 +89,17 @@ function App() {
               <div>
                 <HeaderUser />
                 <Pembayaran />
+                <Footer />
+              </div>
+            } 
+          />
+          
+          <Route 
+            path="/chatU" 
+            element={
+              <div>
+                <HeaderUser />
+                <chatU />
                 <Footer />
               </div>
             } 

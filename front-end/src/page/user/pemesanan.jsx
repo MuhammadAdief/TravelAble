@@ -5,34 +5,61 @@ function BookingPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedPeople, setSelectedPeople] = useState("");
-  const [showDestinations, setShowDestinations] = useState(false);
-  const [showPeopleOptions, setShowPeopleOptions] = useState(false);
-  const [showCalendar, setShowCalendar] = useState(false);
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [extraAdded, setExtraAdded] = useState(false);
+
+  const [showDestinations, setShowDestinations] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [showPeopleOptions, setShowPeopleOptions] = useState(false);
+
+  const destinations = ["Bandung", "Jakarta", "Bali", "Yogyakarta"];
+  const peopleOptions = ["1 Orang", "2 Orang", "3 Orang", "4 Orang"];
 
   const handleExtraToggle = () => {
     setExtraAdded((prev) => !prev);
   };
 
-  const destinations = [
-    "Dusun Bambu", "Babakan Siliwangi", "Museum Geologi", "Fairy Garder", "Taman Lansia",
-    "Kebun Binatang Bandung", "Trans Studio Bandung", "Floating Market Lembang", "Farmhouse lembang", "Saung Angklung Udjo",
-    "Maribaya Natural Hot Spring",
-  ];
-
-  const peopleOptions = ["1 Orang", "2 Orang", "3 Orang", "4 Orang"];
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handlePhoneNumberChange = (e) => {
-    const value = e.target.value;
-    if (/^\d*$/.test(value)) {
-      // Hanya angka yang diperbolehkan
-      setPhoneNumber(value);
+  const handleSubmit = async () => {
+    const data = {
+      destination: selectedDestination,
+      startDate,
+      endDate,
+      people: selectedPeople,
+      email,
+      phoneNumber,
+      extraProtection: extraAdded,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/pemesanan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        alert("Pemesanan berhasil!");
+        console.log("Response:", result);
+      } else {
+        alert("Terjadi kesalahan saat memproses pemesanan.");
+        console.error("Error:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Gagal menghubungi server.");
     }
   };
 
@@ -260,40 +287,19 @@ function BookingPage() {
               />
             </div>
             <ul className="text-sm text-gray-700 list-disc pl-4">
-              <li>Jalan Telekomunikasi 2</li>
-              <li>Sukapura, Kabupaten Bandung, 40267</li>
+              <li>Jalan Telekomunikasi 1, Gedung XYZ</li>
+              <li>Bandung, Jawa Barat</li>
+              <li>Meeting Point pukul 07:00 WIB</li>
             </ul>
           </div>
-          {/*buatkan rincian harga tepat berada di bawah di detail lokasi kumpul*/}
-                    {/* Rincian Harga */}
-                    <div className="mt-4 p-4 border rounded-md shadow-md bg-white">
-            <h3 className="text-[#FA9A0A] text-lg font-bold mb-4">Rincian Harga</h3>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-semibold text-gray-700">
-                Harga yang Anda bayar
-              </span>
-              <span className="text-lg font-bold text-[#FA9A0A]">RP. 420.000</span>
-            </div>
-            <hr className="my-2 border-[#FA9A0A]-300" />
-            <div className="flex justify-between items-center text-sm mb-2">
-              <span>Paket (1x)</span>
-              <span className="font-bold">RP. 320.000</span>
-            </div>
-            <div className="flex justify-between items-center text-sm mb-2">
-              <span>Pemandu Spesialis</span>
-              <span className="font-bold">RP. 50.000</span>
-            </div>
-            <div className="flex justify-between items-center text-sm">
-              <span>Titik Penjemputan</span>
-              <span className="font-bold">RP. 50.000</span>
-            </div>
-          </div>
-          {/* Button Lanjutkan Ke Pembayaran */}
-            <div className="mt-4 flex justify-end">
-              <button className="bg-[#FA9A0A] text-white px-6 py-3 rounded-md hover:bg-[#e58907] shadow-md">
-                Lanjutkan Ke Pembayaran
-              </button>
-            </div>
+
+          {/* Button Submit */}
+          <button
+            onClick={handleSubmit}
+            className="mt-6 w-full bg-blue-600 text-white p-3 rounded-md hover:bg-blue-700"
+          >
+            Konfirmasi Pemesanan
+          </button>
         </div>
       </div>
     </div>

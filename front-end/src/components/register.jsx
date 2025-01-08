@@ -5,7 +5,59 @@ import gambarKiri from './assets/kiri butuh.png';
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [role, setRole] = useState('');
+
+  // State untuk form data
+  const [formData, setFormData] = useState({
+    nama: '',
+    role: '',
+    // gender: '',
+    // tanggalLahir: '',
+    // keahlian: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  // Fungsi untuk menangani perubahan input
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Fungsi untuk mengirim data ke API register
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    // Validasi sederhana
+    if (formData.password !== formData.confirmPassword) {
+      alert('Password dan konfirmasi password tidak cocok');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Registrasi berhasil!');
+        window.location.href = '/'; // Redirect ke halaman login
+      } else {
+        alert(data.message || 'Terjadi kesalahan saat registrasi');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan, silakan coba lagi');
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -19,12 +71,15 @@ export default function RegisterPage() {
           </div>
 
           {/* Register Form */}
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleRegister}>
             {/* Nama Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Nama</label>
               <input
                 type="text"
+                name="nama"
+                value={formData.nama}
+                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
@@ -33,12 +88,14 @@ export default function RegisterPage() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
               <div className="relative">
-                <select 
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none"
                 >
-                  <option value="">Pengguna</option>
+                  <option value="">Pilih Role</option>
+                  <option value="pengguna">Pengguna</option>
                   <option value="pemandu">Pemandu</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
@@ -46,12 +103,15 @@ export default function RegisterPage() {
             </div>
 
             {/* Conditional Fields for Pemandu */}
-            {role === 'pemandu' && (
+            {formData.role === 'pemandu' && (
               <>
                 {/* Gender Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
-                  <select 
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 appearance-none"
                   >
                     <option value="">Pilih Gender</option>
@@ -63,19 +123,22 @@ export default function RegisterPage() {
                 {/* Tanggal Lahir Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
-                  <div className="relative">
-                    <input
-                      type="date"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    />
-                    <Calendar className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" />
-                  </div>
+                  <input
+                    type="date"
+                    name="tanggalLahir"
+                    value={formData.tanggalLahir}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
                 </div>
 
                 {/* Keahlian Input */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Keahlian</label>
                   <textarea
+                    name="keahlian"
+                    value={formData.keahlian}
+                    onChange={handleChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     rows={3}
                   />
@@ -88,6 +151,9 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
               <input
                 type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 placeholder="Email Anda"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
@@ -98,11 +164,14 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
               <div className="relative">
                 <input
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                <button 
+                <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
@@ -121,11 +190,14 @@ export default function RegisterPage() {
               <label className="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
               <div className="relative">
                 <input
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
                   placeholder="Konfirmasi Password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                <button 
+                <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2"
@@ -162,8 +234,8 @@ export default function RegisterPage() {
       <div className="bg-[#242277] flex-1 flex items-center justify-center min-h-screen relative">
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
           <div className="absolute top-0 left-0 w-64 h-64 bg-orange-500 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
-            <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-300 rounded-full transform translate-x-1/2 translate-y-1/2"></div>
-             <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-purple-800 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 right-0 w-48 h-48 bg-blue-300 rounded-full transform translate-x-1/2 translate-y-1/2"></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-purple-800 rounded-full transform -translate-x-1/2 -translate-y-1/2"></div>
         </div>
         <div className="relative z-10 flex items-center justify-center w-[500px] h-[500px]">
           <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-md rounded-lg p-6">
@@ -172,6 +244,6 @@ export default function RegisterPage() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>
+  );
 }

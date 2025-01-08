@@ -30,20 +30,6 @@ const DashboardPengguna = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Header */}
-      <header className="bg-white shadow-md py-4 px-8 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <img src="/logo.png" alt="TravelAble Logo" className="h-8" />
-          <h1 className="text-lg font-bold text-indigo-600">TravelAble</h1>
-        </div>
-        <nav className="flex items-center gap-6">
-          <a href="#" className="text-gray-600 hover:text-indigo-600">Dashboard</a>
-          <a href="#" className="text-gray-600 hover:text-indigo-600">Chat Pelanggan</a>
-          <a href="#" className="text-gray-600 hover:text-indigo-600">Pemesanan Tersedia</a>
-          <a href="#" className="text-gray-600 hover:text-indigo-600">Jadwal Pemandu</a>
-          <div className="text-indigo-600 font-medium">Hi, PEMANDU</div>
-        </nav>
-      </header>
 
       {/* Main Content */}
       <main className="px-8 py-6">
@@ -142,54 +128,6 @@ const DashboardPengguna = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-indigo-600 text-white py-6 px-8 mt-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Left Section */}
-          <div>
-            <h4 className="font-bold">Tentang TravelAble</h4>
-            <p className="text-sm mt-2">Rekomendasi wisata aksesibel untuk disabilitas dengan pemandu wisata terlatih.</p>
-            <h5 className="font-semibold mt-4">Panduan Informasi</h5>
-            <ul className="text-sm mt-2 space-y-2">
-              <li><a href="#" className="hover:underline">Panduan Pengguna</a></li>
-              <li><a href="#" className="hover:underline">Tentang Kami</a></li>
-              <li><a href="#" className="hover:underline">Kontak & Dukungan</a></li>
-              <li><a href="#" className="hover:underline">FAQ's</a></li>
-            </ul>
-            <p className="mt-6">&copy; TravelAble</p>
-          </div>
-
-          {/* Middle Section */}
-          <div>
-            <h5 className="font-bold">Alamat</h5>
-            <p className="text-sm mt-2">Bojongsoang, Bandung</p>
-            <h5 className="font-bold mt-4">Email</h5>
-            <p className="text-sm mt-2">support@travelable.com</p>
-            <h5 className="font-bold mt-4">Hotline</h5>
-            <p className="text-sm mt-2">0800-1234-5678</p>
-          </div>
-
-          {/* Right Section */}
-          <div className="text-center">
-            <img src="/logo.png" alt="TravelAble Logo" className="mx-auto h-12" />
-            <h5 className="font-bold mt-4">Social Media</h5>
-            <div className="flex justify-center mt-4 space-x-4">
-              <a href="#" className="text-white hover:text-gray-300">
-                <i className="fab fa-facebook text-2xl"></i>
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <i className="fab fa-twitter text-2xl"></i>
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <i className="fab fa-instagram text-2xl"></i>
-              </a>
-              <a href="#" className="text-white hover:text-gray-300">
-                <i className="fab fa-whatsapp text-2xl"></i>
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };

@@ -8,15 +8,45 @@ export default function LoginPage({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    if (email === 'test@example.com' && password === 'password123') {
-      if (onLogin) {
-        onLogin(); // Panggil fungsi dari prop
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      const data = await response.json();
+      console.log(data); // Tambahkan ini untuk melihat response
+  
+      if (response.ok) {
+        // alert('Login berhasil');
+        if (onLogin) {
+          onLogin(); // Panggil fungsi dari prop
+        }
+  
+        // Perulangan untuk memastikan redirect berhasil
+        let loginSuccess = true; // Flag untuk status login
+        let redirectCount = 0; // Hitungan percobaan redirect
+  
+        while (loginSuccess && redirectCount < 3) { // Batasi perulangan maksimal 3 kali
+          try {
+            window.location.href = '/DashboardUser'; // Halaman dashboard
+            break; // Hentikan perulangan jika redirect berhasil
+          } catch (err) {
+            console.error('Redirect gagal, mencoba lagi...', err);
+            redirectCount++;
+          }
+        }
+      } else {
+        alert(data.message || 'Login gagal, silakan coba lagi');
       }
-      window.location.href = '/tentang_kami'; // Redirect setelah login
-    } else {
-      alert('Email atau password salah');
-    }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan, silakan coba lagi');
+    }
   };
   return (
     <div className="flex h-screen">
